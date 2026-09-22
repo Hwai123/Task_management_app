@@ -3,10 +3,19 @@ import { PRIORITY_LABELS, type Task } from '@/domain/task.types'
 
 defineProps<{ task: Task }>()
 const emit = defineEmits<{ edit: [task: Task]; delete: [task: Task] }>()
+
+const cardTone = {
+  high: 'border-rose-200 bg-rose-50 hover:border-rose-300 dark:border-rose-900/80 dark:bg-rose-950/40 dark:hover:border-rose-700',
+  medium: 'border-amber-200 bg-amber-50 hover:border-amber-300 dark:border-amber-900/80 dark:bg-amber-950/40 dark:hover:border-amber-700',
+  low: 'border-emerald-200 bg-emerald-50 hover:border-emerald-300 dark:border-emerald-900/80 dark:bg-emerald-950/40 dark:hover:border-emerald-700',
+} satisfies Record<Task['priority'], string>
 </script>
 
 <template>
-  <article class="group cursor-grab rounded-xl border border-slate-200 bg-white p-4 shadow-card transition hover:-translate-y-0.5 hover:border-indigo-300 hover:shadow-lg active:cursor-grabbing dark:border-slate-700 dark:bg-slate-900 dark:hover:border-indigo-500/70">
+  <article
+    class="group cursor-grab rounded-xl border p-4 shadow-card transition hover:-translate-y-0.5 hover:shadow-lg active:cursor-grabbing"
+    :class="cardTone[task.priority]"
+  >
     <div class="flex items-start gap-3">
       <div class="min-w-0 flex-1">
         <h3 class="break-words text-[15px] font-semibold leading-6 text-slate-900 dark:text-slate-50">
@@ -21,7 +30,7 @@ const emit = defineEmits<{ edit: [task: Task]; delete: [task: Task] }>()
       </svg>
     </div>
 
-    <div class="mt-4 flex items-center justify-between gap-3 border-t border-slate-100 pt-3 dark:border-slate-800">
+    <div class="mt-4 flex items-center justify-between gap-3 border-t border-black/5 pt-3 dark:border-white/10">
       <span class="priority-badge" :class="`priority-${task.priority}`">
         <span class="h-1.5 w-1.5 rounded-full bg-current" />
         {{ PRIORITY_LABELS[task.priority] }}优先级
