@@ -1,0 +1,77 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * { @apply border-slate-200; }
+  body { @apply m-0 min-w-[320px] bg-slate-50 font-sans antialiased dark:bg-slate-950; }
+  button, input, textarea, select { font: inherit; }
+  button:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible {
+    @apply outline-none ring-2 ring-indigo-500 ring-offset-2 ring-offset-white dark:ring-offset-slate-950;
+  }
+}
+
+@layer components {
+  .primary-button,
+  .secondary-button,
+  .danger-button,
+  .header-button,
+  .banner-button {
+    @apply inline-flex min-h-10 items-center justify-center gap-2 rounded-lg px-4 text-sm font-semibold transition disabled:pointer-events-none disabled:opacity-50;
+  }
+  .primary-button { @apply bg-indigo-600 text-white shadow-sm hover:bg-indigo-700 active:bg-indigo-800; }
+  .secondary-button { @apply border border-slate-300 bg-white text-slate-700 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800; }
+  .danger-button { @apply bg-rose-600 text-white hover:bg-rose-700; }
+  .header-button { @apply px-3 text-slate-600 hover:bg-slate-100 hover:text-slate-950 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-white; }
+  .header-button svg,
+  .primary-button svg { @apply h-[18px] w-[18px] fill-none stroke-current stroke-2; }
+  .icon-button { @apply grid h-10 w-10 shrink-0 place-items-center rounded-lg text-slate-500 transition hover:bg-slate-100 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-white; }
+  .icon-button svg { @apply h-5 w-5 fill-none stroke-current stroke-2; }
+  .card-action { @apply grid h-8 w-8 place-items-center rounded-md text-slate-500 transition hover:bg-slate-100 hover:text-indigo-600 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-indigo-400; }
+  .card-action.danger { @apply hover:bg-rose-50 hover:text-rose-600 dark:hover:bg-rose-950/70 dark:hover:text-rose-400; }
+  .card-action svg { @apply h-[17px] w-[17px] fill-none stroke-current stroke-[1.8]; }
+  .field-label { @apply mb-2 block text-sm font-semibold text-slate-700 dark:text-slate-300; }
+  .field-count { @apply mb-2 text-xs tabular-nums text-slate-400; }
+  .field-input { @apply block w-full rounded-lg border border-slate-300 bg-white px-3.5 py-2.5 text-base text-slate-900 shadow-sm outline-none transition placeholder:text-slate-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:placeholder:text-slate-600 dark:focus:border-indigo-500; }
+  .field-error { @apply border-rose-500 focus:border-rose-500 focus:ring-rose-500/20; }
+  .error-text { @apply mt-1.5 text-sm font-medium text-rose-600 dark:text-rose-400; }
+  .dialog-backdrop { @apply fixed inset-0 z-50 grid place-items-center overflow-y-auto bg-slate-950/60 p-4 backdrop-blur-sm; }
+  .dialog-panel { @apply w-full max-w-xl overflow-hidden rounded-2xl border border-white/10 bg-white shadow-dialog dark:bg-slate-950; }
+  .banner-button { @apply min-h-8 rounded-md border border-black/10 bg-white/50 px-3 hover:bg-white dark:border-white/20 dark:bg-black/10 dark:hover:bg-black/20; }
+  .priority-badge { @apply inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-bold; }
+  .priority-high { @apply bg-rose-50 text-rose-700 dark:bg-rose-950/70 dark:text-rose-300; }
+  .priority-medium { @apply bg-amber-50 text-amber-700 dark:bg-amber-950/70 dark:text-amber-300; }
+  .priority-low { @apply bg-emerald-50 text-emerald-700 dark:bg-emerald-950/70 dark:text-emerald-300; }
+  .status-mark { @apply h-2.5 w-2.5 rounded-[3px]; }
+  .status-todo { @apply bg-indigo-500; }
+  .status-in-progress { @apply bg-amber-500; }
+  .status-done { @apply bg-emerald-500; }
+}
+
+.drag-ghost { opacity: .32; }
+.drag-chosen { transform: rotate(.6deg); }
+.drag-active { box-shadow: 0 24px 60px rgba(15, 23, 42, .22); }
+
+.dialog-enter-active,
+.dialog-leave-active { transition: opacity .16s ease; }
+.dialog-enter-active .dialog-panel,
+.dialog-leave-active .dialog-panel { transition: transform .18s ease, opacity .18s ease; }
+.dialog-enter-from,
+.dialog-leave-to { opacity: 0; }
+.dialog-enter-from .dialog-panel,
+.dialog-leave-to .dialog-panel { opacity: 0; transform: translateY(10px) scale(.98); }
+
+.toast-enter-active,
+.toast-leave-active { transition: opacity .18s ease, transform .18s ease; }
+.toast-enter-from,
+.toast-leave-to { opacity: 0; transform: translate(-50%, 10px); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    scroll-behavior: auto !important;
+    transition-duration: .01ms !important;
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
+
