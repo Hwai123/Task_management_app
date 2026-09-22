@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted, onUnmounted, ref } from 'vue'
 import AppHeader from '@/components/layout/AppHeader.vue'
 import BoardView from '@/components/board/BoardView.vue'
 import TaskFormDialog from '@/components/dialogs/TaskFormDialog.vue'
@@ -21,6 +21,12 @@ const pendingImport = ref<Task[] | null>(null)
 const toastMessage = ref('')
 const toastTone = ref<'success' | 'error'>('success')
 let toastTimer: number | undefined
+const installPrompt = ref<BeforeInstallPromptEvent | null>(null)
+
+interface BeforeInstallPromptEvent extends Event {
+  prompt(): Promise<void>
+  userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>
+}
 
 const total = computed(() => taskStore.tasks.length)
 const confirmTitle = computed(() => {
@@ -37,7 +43,32 @@ const confirmMessage = computed(() => {
 onMounted(() => {
   themeStore.initializeTheme()
   taskStore.initialize()
+  window.addEventListener('beforeinstallprompt', captureInstallPrompt as EventListener)
+  window.addEventListener('appinstalled', clearInstallPrompt)
 })
+
+onUnmounted(() => {
+  window.removeEventListener('beforeinstallprompt', captureInstallPrompt as EventListener)
+  window.removeEventListener('appinstalled', clearInstallPrompt)
+})
+
+function captureInstallPrompt(event: Event) {
+  event.preventDefault()
+  installPrompt.value = event as BeforeInstallPromptEvent
+}
+
+function clearInstallPrompt() {
+  installPrompt.value = null
+}
+
+async function installApp() {
+  const prompt = installPrompt.value
+  if (!prompt) return
+  await prompt.prompt()
+  const choice = await prompt.userChoice
+  installPrompt.value = null
+  if (choice.outcome === 'accepted') toast('任务流已开始安装')
+}
 
 function toast(message: string, tone: 'success' | 'error' = 'success') {
   window.clearTimeout(toastTimer)
@@ -137,7 +168,7 @@ function backupCorrupt() {
 
 <template>
   <div class="min-h-screen bg-slate-50 text-slate-900 transition-colors dark:bg-slate-950 dark:text-slate-100">
-    <AppHeader :total="total" :done="taskStore.doneTasks.length" :theme="themeStore.theme" @create="openCreate" @import="importFile" @export="exportCurrent" @toggle-theme="themeStore.toggleTheme" />
+    <AppHeader :total="total" :done="taskStore.doneTasks.length" :theme="themeStore.theme" :installable="installPrompt !== null" @create="openCreate" @import="importFile" @export="exportCurrent" @install="installApp" @toggle-theme="themeStore.toggleTheme" />
     <PersistenceBanner :state="taskStore.persistenceState" :message="taskStore.persistenceMessage" @retry="retrySave" @export="exportCurrent" @backup="backupCorrupt" @reset="confirmMode = 'reset'" />
     <BoardView :todo="taskStore.todoTasks" :in-progress="taskStore.inProgressTasks" :done="taskStore.doneTasks" @move="moveTask" @edit="openEdit" @delete="askDelete" @create="openCreate" />
 

@@ -1,0 +1,52 @@
+name: Release Windows app
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release-windows:
+    name: Build and publish Windows installer
+    runs-on: windows-latest
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Set up Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests
+        run: npm test
+
+      - name: Build and publish v1.0.0
+        uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tagName: v1.0.0
+          releaseName: Task Flow v1.0.0
+          releaseBody: |
+            任务流首个公开版本。
+
+            - Windows x64 安装包
+            - 所有任务仅保存在本机
+            - 支持 JSON 导入与导出
+            - 安装后可完全离线运行
+
+            此安装包暂未进行代码签名，Windows SmartScreen 可能显示保护提示。请确认安装包来自本仓库后再继续运行。
+          releaseDraft: false
+          prerelease: false
+          args: --bundles nsis
+

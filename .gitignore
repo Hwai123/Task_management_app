@@ -1,5 +1,7 @@
 node_modules
 dist
 .sites-runtime
+.npm-cache
+src-tauri/target
 *.local
 

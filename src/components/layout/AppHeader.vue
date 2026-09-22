@@ -6,12 +6,14 @@ const props = defineProps<{
   total: number
   done: number
   theme: Theme
+  installable: boolean
 }>()
 
 const emit = defineEmits<{
   create: []
   import: [file: File]
   export: []
+  install: []
   toggleTheme: []
 }>()
 
@@ -62,6 +64,19 @@ function selectFile(event: Event) {
           <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 15V3m0 12 4-4m-4 4-4-4M5 14v5h14v-5" /></svg>
           导出
         </button>
+        <button v-if="installable" class="header-button" type="button" @click="emit('install')">
+          <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 3v12m0 0 4-4m-4 4-4-4M5 18v2h14v-2" /></svg>
+          安装应用
+        </button>
+        <a
+          class="header-button"
+          href="https://github.com/Hwai123/Task_management_app/releases/latest"
+          target="_blank"
+          rel="noreferrer"
+        >
+          <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 3v12m0 0 4-4m-4 4-4-4M5 18v2h14v-2" /></svg>
+          Windows 版
+        </a>
         <button
           class="icon-button"
           type="button"

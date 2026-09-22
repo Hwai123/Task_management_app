@@ -1,0 +1,21 @@
+[package]
+name = "task-flow"
+version = "1.0.0"
+description = "A private, offline-first personal task board"
+authors = ["Hwai123"]
+edition = "2021"
+
+[lib]
+name = "task_flow_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = [] }
+
+[features]
+default = ["custom-protocol"]
+custom-protocol = ["tauri/custom-protocol"]
+

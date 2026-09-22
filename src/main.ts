@@ -10,3 +10,11 @@ app.use(pinia)
 app.mount('#app')
 registerTaskTools(pinia)
 
+if ('serviceWorker' in navigator && import.meta.env.PROD && window.location.protocol.startsWith('http')) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/service-worker.js').catch(() => {
+      // The app remains fully usable when service worker registration is unavailable.
+    })
+  })
+}
+
